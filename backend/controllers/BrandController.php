@@ -16,6 +16,7 @@ use yii\web\UploadedFile;
 
 class BrandController extends Controller
 {
+//    添加
     public function actionAdd(){
         $model= new Brand();
         $request=new Request();
@@ -48,7 +49,7 @@ class BrandController extends Controller
         return $this->render('add',['model'=>$model]);
     }
 
-
+//    列表
     public function actionIndex(){
         $model=Brand::find()->where(['!=','status','-1']);
         $total=$model->count();
@@ -64,7 +65,7 @@ class BrandController extends Controller
 
     }
 
-
+//     修改
     public function actionEdit($id){
         $model=Brand::findOne(['id'=>$id]);
         $request=new Request();
@@ -96,6 +97,7 @@ class BrandController extends Controller
         return $this->render('add',['model'=>$model]);
     }
 
+//    伪删除
     public function actionDelete($id){
         $model=Brand::findOne(['id'=>$id]);
         $model->status='-1';
@@ -103,4 +105,35 @@ class BrandController extends Controller
        return $this->redirect(['brand/index']);
 
     }
+//    回收站
+    public function actionHsz(){
+        $model=Brand::find()->where(['=','status','-1']);
+        $total=$model->count();
+        $pages=2;
+        $page=new Pagination([
+            'totalCount'=>$total,
+            'defaultPageSize'=>$pages
+        ]);
+        $articles=$model->limit($page->limit)->offset($page->offset)->all();
+        return $this->render('index',['page'=>$page,'articles'=>$articles]);
+    }
+
+//    回收站删除
+    public function actionDeletes($id){
+        $model=Brand::findOne(['id'=>$id]);
+        if($model->logo){
+            unlink(\Yii::getAlias('@webroot').$model->logo);
+        }
+        $model->delete();
+        return $this->redirect(['hsz']);
+    }
+
+//    回收站还原
+    public function actionUpdate($id){
+        $model=Brand::findOne(['id'=>$id]);
+        $model->statua=1;
+        $model->save();
+        return $this->redirect(['index']);
+    }
+
 }

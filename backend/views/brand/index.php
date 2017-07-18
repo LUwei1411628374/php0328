@@ -2,6 +2,7 @@
 
 
 <?= \yii\bootstrap\Html::a('添加',['brand/add'],['class'=>'btn btn-primary'])?>
+<?= \yii\bootstrap\Html::a('回收站',['brand/hsz'],['class'=>'btn btn-warning'])?>
 <table class="table table-bordered">
     <tr>
         <th>ID</th>
@@ -28,7 +29,7 @@
     <?php endforeach;?>
 </table>
 <?php
-echo \yii\widgets\LinkPager::widget(['pagination'=>$page,'nextPageLabel'=>'下一页','prevPageLabel'=>'上一页','firstPageLabel'=>'首页']);
+echo \yii\widgets\LinkPager::widget(['pagination'=>$page,'nextPageLabel'=>'下一页','prevPageLabel'=>'上一页','firstPageLabel'=>'首页','lastPageLabel'=>'末页']);
 
 
 
