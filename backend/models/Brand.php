@@ -41,9 +41,10 @@ class Brand extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'intro','sort', 'status'], 'required'],
+            [['name', 'intro','logo', 'status'], 'required'],
+            [['logo'], 'string', 'max' => 255],
 
-            ['imgFile','file','extensions'=>['gif','png','jpg']],
+            //['logo','file','extensions'=>['gif','png','jpg']],
         ];
     }
 
@@ -58,7 +59,7 @@ class Brand extends \yii\db\ActiveRecord
 
             'sort' => '排序',
             'status' => '状态',
-            'imgFile'=>'LOGO'
+            'logo'=>'LOGO'
         ];
     }
 }

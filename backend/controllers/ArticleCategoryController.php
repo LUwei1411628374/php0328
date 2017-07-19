@@ -11,7 +11,7 @@ class ArticleCategoryController extends \yii\web\Controller
 //    列表
     public function actionIndex()
     {
-        $model=ArticleCategory::find()->where(['>','status','-1']);
+        $model=ArticleCategory::find()->where(['>','status','-1'])->orderBy('sort');
         $total = $model->count();
         $pages=2;
         $page = new  Pagination([
@@ -68,7 +68,7 @@ class ArticleCategoryController extends \yii\web\Controller
             'defaultPageSize'=>$pages
         ]);
         $articles=$model->limit($page->limit)->offset($page->offset)->all();
-        return $this->render('index',['page'=>$page,'articles'=>$articles]);
+        return $this->render('hsz',['page'=>$page,'articles'=>$articles]);
     }
 
 //    回收站删除
@@ -81,8 +81,8 @@ class ArticleCategoryController extends \yii\web\Controller
 //    回收站还原
     public function actionUpdate($id){
         $model=ArticleCategory::findOne(['id'=>$id]);
-        $model->statua=1;
+        $model->status='1';
         $model->save();
-        return $this->redirect(['index']);
+        return $this->redirect(['hsz']);
     }
 }

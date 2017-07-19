@@ -16,7 +16,8 @@
                 <td><?=$article->name?></td>
                 <td><?=$article->intro?></td>
                 <td><?=$article->sort?></td>
-                <td><?=\backend\models\ArticleCategory::getArticleOptions($hidden=-1)['$article->status']?></td>
+
+                <td><?=\backend\models\ArticleCategory::getArticleOptions(false)[$article->status]?></td>
                 <td>
                     <?=\yii\bootstrap\Html::a('还原',['article-category/update','id'=>$article->id],['class'=>'btn btn-warning'])?>
                     <?=\yii\bootstrap\Html::a('删除',['article-category/deletes','id'=>$article->id],['class'=>'btn btn-danger'])?>

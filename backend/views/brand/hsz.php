@@ -1,7 +1,5 @@
 
-
-
-<?= \yii\bootstrap\Html::a('列表',['brand/index'],['class'=>'btn btn-primary'])?>
+<?= \yii\bootstrap\Html::a('返回列表',['brand/index'],['class'=>'btn btn-primary'])?>
 <table class="table table-bordered">
     <tr>
         <th>ID</th>
@@ -19,7 +17,7 @@
             <td><?=$brand->intro?></td>
             <td><?=\yii\bootstrap\Html::img($brand->logo,['height'=>50])?></td>
             <td><?=$brand->sort?></td>
-            <td><?=\backend\models\Brand::getStatusOptions()[$brand->status]?></td>
+            <td><?=\backend\models\Brand::getStatusOptions(false)[$brand->status]?></td>
             <td>
                 <?= \yii\bootstrap\Html::a('修改',['brand/update','id'=>$brand->id],['class'=>'btn btn-warning'])?>
                 <?= \yii\bootstrap\Html::a('删除',['brand/deletes','id'=>$brand->id],['class'=>'btn btn-danger'])?>
