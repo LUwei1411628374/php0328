@@ -174,8 +174,9 @@ class BrandController extends Controller
                 //END CLOSURE BY TIME
                 'validateOptions' => [
                     'extensions' => ['jpg', 'png'],
-                    'maxSize' => 1 * 1024 * 1024, //file size
+                    'maxSize' => 2 * 1024 * 1024, //file size
                 ],
+
                 'beforeValidate' => function (UploadAction $action) {
                     //throw new Exception('test error');
                 },
@@ -196,25 +197,4 @@ class BrandController extends Controller
             ],
         ];
     }
-
-    /*public function actionQiniu(){
-        $config = [
-            'accessKey'=>'3cNnYXHp2g1IugRr1mKdFDlooU5BS_CMPmwisrqi',
-            'secretKey'=>'v_JY8Yp3Dp3bVJurDs40dU67IJMNe-C78o4C-t3D',
-            'domain'=>'http://otbtv88wb.bkt.clouddn.com/',
-            'bucket'=>'yii2shop',
-            'area'=>Qiniu::AREA_HUADONG
-        ];
-
-
-
-        $qiniu = new Qiniu($config);
-        $key = 'upload/0a/7e/0a7ec5538bb23d83e2595dd41c1d5c1cf0a61fa3.jpg';
-
-        $qiniu->uploadFile( \Yii::getAlias('@webroot').'upload/0a/7e/0a7ec5538bb23d83e2595dd41c1d5c1cf0a61fa3.jpg',
-            $key);
-        $url = $qiniu->getLink($key);
-        var_dump($url);
-    }*/
-
 }
