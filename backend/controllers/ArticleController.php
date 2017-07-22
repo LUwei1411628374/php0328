@@ -12,9 +12,11 @@ use backend\models\ArticleDetail;
 use yii\data\Pagination;
 use yii\web\Controller;
 use yii\web\Request;
+use \kucha\ueditor\UEditor;
 
 class ArticleController extends Controller
 {
+    //列表展示
     public function actionIndex($keywords='')
     {
         $model=Article::find()->where(['and','status>-1',"name like '%{$keywords}%'"]);
@@ -28,7 +30,7 @@ class ArticleController extends Controller
         $articles=$model->limit($page->limit)->offset($page->offset)->all();
         return $this->render('index',['articles'=>$articles,'page'=>$page]);
     }
-
+//    添加
     public function actionAdd(){
         $model = new Article();
         $models=new ArticleDetail();
@@ -47,8 +49,7 @@ class ArticleController extends Controller
 
         return  $this->render('add',['model'=>$model,'models'=>$models]);
     }
-
-
+//    修改
     public function actionEdit($id){
         $model =Article::findOne(['id'=>$id]);
         $models=ArticleDetail::findOne(['article_id'=>$id]);
@@ -67,7 +68,7 @@ class ArticleController extends Controller
 
         return  $this->render('add',['model'=>$model,'models'=>$models]);
     }
-
+//    伪删除
     public function actionDelete($id){
         $model=Article::findOne(['id'=>$id]);
         $model->status='-1';
@@ -75,13 +76,13 @@ class ArticleController extends Controller
         return $this->redirect(['index']);
     }
 
-
+//    查看
     public function actionLook($id){
         $models=Article::findOne(['id'=>$id]);
         $model=ArticleDetail::findOne(['article_id'=>$id]);
         return $this->render('look',['model'=>$model,'models'=>$models]);
     }
-
+//    回收站
     public function actionHsz(){
         $model=Article::find()->where(['=','status','-1'])->orderBy('sort');
 
@@ -94,6 +95,36 @@ class ArticleController extends Controller
         $articles=$model->limit($page->limit)->offset($page->offset)->all();
         return $this->render('hsz',['articles'=>$articles,'page'=>$page]);
     }
+//    还原
+    public function actionUpdate($id){
+        $model=Article::findOne(['id'=>$id]);
+        $model->status='1';
+        $model->save();
+        return $this->redirect(['index']);
+    }
 
+//    回收站删除
+    public function actionDeletes($id){
+        $model=Article::findOne(['id'=>$id]);
+        $models=ArticleDetail::findOne(['id'=>$id]);
+        $model->delete();
+        $models->delete();
+        return $this->redirect(['index']);
+    }
+//    编辑器配置
+    public function actions()
+    {
+        return [
 
+            'upload' => [
+                'class' => 'kucha\ueditor\UEditorAction',
+
+                'config' => [
+                    "imageUrlPrefix"  => '',//图片访问路径前缀
+                    "imagePathFormat" => "/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}",//上传保存路径
+                    "imageRoot" => \Yii::getAlias('@webroot')
+                ]
+            ]
+        ];
+    }
 }

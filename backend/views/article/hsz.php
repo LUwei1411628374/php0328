@@ -23,8 +23,8 @@
             <td><?=date('Y-m-d',$article->create_time)?></td>
             <td>
                 <?=\yii\bootstrap\Html::a('查看',['article/look','id'=>$article->id],['class'=>'btn btn-primary'])?>
-                <?=\yii\bootstrap\Html::a('修改',['article/edit','id'=>$article->id],['class'=>'btn btn-warning'])?>
-                <?=\yii\bootstrap\Html::a('删除',['article/delete','id'=>$article->id],['class'=>'btn btn-danger'])?>
+                <?=\yii\bootstrap\Html::a('还原',['article/update','id'=>$article->id],['class'=>'btn btn-warning'])?>
+                <?=\yii\bootstrap\Html::a('删除',['article/deletes','id'=>$article->id],['class'=>'btn btn-danger'])?>
             </td>
         </tr>
     <?php endforeach;?>

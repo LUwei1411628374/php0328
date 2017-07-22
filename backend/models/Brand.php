@@ -45,7 +45,7 @@ class Brand extends \yii\db\ActiveRecord
             [['logo'], 'string', 'max' => 255],
 
 
-           // ['logo','file','extensions'=>['gif','png','jpg'],'maxSize'=>1024*1024*1],
+            //['logo','file','extensions'=>['gif','png','jpg'],'maxSize'=>1024*1024*1],
         ];
 
     }

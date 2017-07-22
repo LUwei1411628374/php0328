@@ -4,6 +4,7 @@ namespace backend\models;
 
 use Yii;
 
+use creocoder\nestedsets\NestedSetsBehavior;
 /**
  * This is the model class for table "goods_category".
  *
@@ -32,7 +33,7 @@ class GoodsCategory extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tree', 'lft', 'rgt', 'depth', 'name', 'parent_id', 'intro'], 'required'],
+            [['name', 'parent_id', 'intro'], 'required'],
             [['tree', 'lft', 'rgt', 'depth', 'parent_id'], 'integer'],
             [['intro'], 'string'],
             [['name'], 'string', 'max' => 255],
@@ -54,5 +55,41 @@ class GoodsCategory extends \yii\db\ActiveRecord
             'parent_id' => '上级分类ID',
             'intro' => '简介',
         ];
+    }
+
+
+    public function behaviors() {
+        return [
+            'tree' => [
+                'class' => NestedSetsBehavior::className(),
+                 'treeAttribute' => 'tree',
+                 'leftAttribute' => 'lft',
+                 'rightAttribute' => 'rgt',
+                 'depthAttribute' => 'depth',
+            ],
+        ];
+    }
+
+    public function transactions()
+    {
+        return [
+            self::SCENARIO_DEFAULT => self::OP_ALL,
+        ];
+    }
+
+    public static function find()
+    {
+        return new GoodsCategoryQuery(get_called_class());
+    }
+
+
+
+    public static function exceptionInfo($msg)
+    {
+        $infos = [
+            'Can not move a node when the target node is same.'=>'不能修改到自己节点下面',
+            'Can not move a node when the target node is child.'=>'不能修改到自己的子孙节点下面',
+        ];
+        return isset($infos[$msg])?$infos[$msg]:$msg;
     }
 }
