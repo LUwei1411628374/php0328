@@ -27,12 +27,6 @@ $this->registerCssFile('@web/zTree/css/demo.css');
 //'depends'=>\yii\web\JqueryAsset::className()  设置依赖JqueryAsset
 $this->registerJsFile('@web/zTree/js/jquery.ztree.core.js',
     ['depends'=>\yii\web\JqueryAsset::className()]);
-//加载js代码
-//$nodes = '[
-//            {id:1, pId:0, name: "父节点1"},
-//            {id:11, pId:1, name: "子节点1"},
-//            {id:12, pId:1, name: "子节点2"}
-//        ];';
 $categories[] = ['id'=>0,'parent_id'=>0,'name'=>'顶级分类','open'=>1];
 $nodes = \yii\helpers\Json::encode($categories);
 $nodeId = $model->parent_id;

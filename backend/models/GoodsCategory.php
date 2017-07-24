@@ -92,4 +92,11 @@ class GoodsCategory extends \yii\db\ActiveRecord
         ];
         return isset($infos[$msg])?$infos[$msg]:$msg;
     }
+
+    public static function getZtreeNodes()
+    {
+        $nodes =  self::find()->select(['id','parent_id','name'])->asArray()->all();
+        $nodes[] = ['id'=>0,'parent_id'=>0,'name'=>'顶级分类','open'=>1];
+        return $nodes;
+    }
 }

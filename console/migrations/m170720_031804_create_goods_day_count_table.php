@@ -18,6 +18,7 @@ class m170720_031804_create_goods_day_count_table extends Migration
 //            count	int	商品数
         'count'=>$this->integer()->notNull()->comment('商品数')
         ]);
+        $this->addPrimaryKey('day','goods_day_count','day');
     }
 
     /**

@@ -21,7 +21,6 @@ class GoodsCategoryController extends Controller
     public function actionAdd(){
         $model = new GoodsCategory(['parent_id'=>0]);
         if($model->load(\Yii::$app->request->post()) && $model->validate()){
-
             //$model->save();
             //判断是否是添加一级分类
             if($model->parent_id){
