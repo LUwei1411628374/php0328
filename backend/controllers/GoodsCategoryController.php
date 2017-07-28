@@ -26,7 +26,6 @@ class GoodsCategoryController extends Controller
             if($model->parent_id){
                 //非一级分类
                 $category = GoodsCategory::findOne(['id'=>$model->parent_id]);
-
                 if($category){
                     $model->prependTo($category);
                 }else{
@@ -73,9 +72,6 @@ class GoodsCategoryController extends Controller
         $model->deletewithChildren();
         \Yii::$app->session->setFlash('success','删除成功');
         return $this->redirect(['index']);
-
-
-
     }
 
 //    修改

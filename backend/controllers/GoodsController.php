@@ -146,7 +146,7 @@ class GoodsController extends \yii\web\Controller
         $models = $query->limit($pager->limit)->offset($pager->offset)->all();
 
 
-        return $this->render('shz',['models'=>$models,'pager'=>$pager]);
+        return $this->render('hsz',['models'=>$models,'pager'=>$pager]);
     }
     //预览商品信息
     public function actionView($id)

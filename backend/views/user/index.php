@@ -1,7 +1,12 @@
 
 <?=\yii\bootstrap\Html::a('添加',['add'],['class'=>'btn btn-info'])?>
 <table class="table table-bordered">
-    <?=\yii\bootstrap\Html::a('修改密码',['my'],['class'=>'btn btn-warning'])?>
+
+    <?php
+        if(!Yii::$app->user->isGuest){
+            echo \yii\bootstrap\Html::a('修改密码',['my'],['class'=>'btn btn-danger']);
+        }
+    ?>
     <table class="table table-bordered">
 
     <tr>

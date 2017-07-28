@@ -5,7 +5,11 @@ return [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+        'authManager'=>[
+            'class'=>\yii\rbac\DbManager::className(),
+        ]
     ],
+
     //修改语言
     'language'=>'zh-CN',
 ];

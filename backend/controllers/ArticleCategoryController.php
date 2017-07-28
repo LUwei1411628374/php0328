@@ -31,6 +31,7 @@ class ArticleCategoryController extends \yii\web\Controller
             if($model->validate()){
                // $model->status= $model->status+1;
                 $model->save();
+                \Yii::$app->session->setFlash('success','添加文章分类成功');
                 return $this->redirect(['index']);
             }
             var_dump($model->getErrors());
@@ -45,6 +46,7 @@ class ArticleCategoryController extends \yii\web\Controller
             $model->load($request->post());
             if($model->validate()){
                 $model->save();
+                \Yii::$app->session->setFlash('success','修改文章分类成功');
                 return $this->redirect(['index']);
             }
             var_dump($model->getErrors());
@@ -56,6 +58,7 @@ class ArticleCategoryController extends \yii\web\Controller
         $model=ArticleCategory::findOne(['id'=>$id]);
         $model->status='-1';
         $model->save();
+        \Yii::$app->session->setFlash('success','删除文章分类成功');
         return $this->redirect(['index']);
     }
 //    回收站
@@ -75,6 +78,7 @@ class ArticleCategoryController extends \yii\web\Controller
     public function actionDeletes($id){
         $model=ArticleCategory::findOne(['id'=>$id]);
         $model->delete();
+        \Yii::$app->session->setFlash('success','删除文章分类成功');
         return $this->redirect(['hsz']);
     }
 
@@ -83,6 +87,7 @@ class ArticleCategoryController extends \yii\web\Controller
         $model=ArticleCategory::findOne(['id'=>$id]);
         $model->status='1';
         $model->save();
+        \Yii::$app->session->setFlash('success','还原文章分类成功');
         return $this->redirect(['hsz']);
     }
 }

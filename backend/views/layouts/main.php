@@ -35,14 +35,29 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    $menuItems = [
-        ['label' => '首页', 'url' => ['/user/index']],
-        ['label' => '首页', 'url' => ['/user/index']],
-    ];
+    $menuItems = [];
+    $menus=\backend\models\Menu::findAll(['parent_id'=>0]);
+    foreach ($menus as $menu){
+        //一级菜单
+        $items = [];
+        foreach ($menu->children as $child){
+            //判断当前用户是否有该路由（菜单）的权限
+            if(Yii::$app->user->can($child->url)){
+                $items[] = ['label' => $child->name, 'url' => [$child->url]];
+            }
+        }
+        //没有子菜单时，不显示一级菜单
+        if(!empty($items)){
+            $menuItems[] = ['label' => $menu->name, 'items' => $items];
+        }
+
+    }
 
     if (Yii::$app->user->isGuest) {
+        $menuItems = [];
         $menuItems[] = ['label' => '登录', 'url' => ['/user/login']];
     } else {
+
         $menuItems[] = '<li>'
             . Html::beginForm(['/user/logout'], 'post')
             . Html::submitButton(

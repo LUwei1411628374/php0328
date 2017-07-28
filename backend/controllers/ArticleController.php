@@ -42,6 +42,7 @@ class ArticleController extends Controller
             $model->save();
             $models->article_id=$model->id;
             $models->save();
+            \Yii::$app->session->setFlash('success','添加文章成功');
             return $this->redirect(['index']);
         }else{
             var_dump($model->getErrors() && $models->getErrors());
@@ -61,6 +62,7 @@ class ArticleController extends Controller
             $model->save();
             $models->article_id=$model->id;
             $models->save();
+            \Yii::$app->session->setFlash('success','修改文章成功');
             return $this->redirect(['index']);
         }else{
             var_dump($model->getErrors() && $models->getErrors());
@@ -73,6 +75,7 @@ class ArticleController extends Controller
         $model=Article::findOne(['id'=>$id]);
         $model->status='-1';
         $model->save();
+        \Yii::$app->session->setFlash('success','删除文章成功');
         return $this->redirect(['index']);
     }
 
@@ -100,6 +103,7 @@ class ArticleController extends Controller
         $model=Article::findOne(['id'=>$id]);
         $model->status='1';
         $model->save();
+        \Yii::$app->session->setFlash('success','还原文章成功');
         return $this->redirect(['index']);
     }
 
@@ -109,6 +113,7 @@ class ArticleController extends Controller
         $models=ArticleDetail::findOne(['id'=>$id]);
         $model->delete();
         $models->delete();
+        \Yii::$app->session->setFlash('success','删除文章成功');
         return $this->redirect(['index']);
     }
 //    编辑器配置

@@ -6,6 +6,7 @@ use backend\models\MyForm;
 use backend\models\User;
 use yii\captcha\CaptchaAction;
 use yii\data\Pagination;
+use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\Request;
 
@@ -37,6 +38,14 @@ class UserController extends \yii\web\Controller
             $model->auth_key = \Yii::$app->security->generateRandomString();
            // var_dump($model);exit;
             $model->save(false);
+            $authManager = \Yii::$app->authManager;
+            if (is_array($model->rules)) {
+                foreach ($model->rules as $ruleName) {
+                    $rule = $authManager->getRole($ruleName);
+                    if ($rule) $authManager->assign($rule, $model->id);
+                }
+            }
+            \Yii::$app->session->setFlash('success','用户添加成功');
             return $this->redirect(['index']);
         }else{
             var_dump($model->getErrors());
@@ -45,33 +54,45 @@ class UserController extends \yii\web\Controller
     }
 //修改
     public function actionEdit($id){
-        $model =User::findOne(['id'=>$id]);
 
+        $model = User::findOne(['id'=>$id]);
+       // $model->scenario = User::SCENARIO_EDIT;//指定当期场景为修改场景
         if($model==null){
             throw new NotFoundHttpException('账号不存在');
         }
+        $model->rules=ArrayHelper::map(\Yii::$app->authManager->getRolesByUser($id),'name','description');
         if($model->load(\Yii::$app->request->post()) && $model->validate()){
+           // var_dump($model);exit;
             if($model->password){
                 $model->password_hash=\Yii::$app->security->generatePasswordHash($model->password);
             }
             $model->touch('updated_at');
             // var_dump($model);exit;
             $model->save(false);
+
+            $authManager = \Yii::$app->authManager;
+            $authManager->revokeAll($id);
+            if (is_array($model->rules)) {
+                foreach ($model->rules as $ruleName) {
+                    $rule = $authManager->getRole($ruleName);
+                    if ($rule) $authManager->assign($rule, $model->id);
+                }
+            }
+            //var_dump($model->getErrors());exit;
+            \Yii::$app->session->setFlash('success','用户修改成功');
             return $this->redirect(['index']);
-        }else{
-            var_dump($model->getErrors());
         }
         return $this->render('add',['model'=>$model]);
     }
 
 //    删除
-        public function actionDelete($id){
-            $model=User::findOne(['id'=>$id]);
-            $model->status= 0;
-            $model->save(false);
-            //var_dump($model->getErrors());exit;
-            return $this->redirect(['index']);
-        }
+    public function actionDelete($id){
+        \Yii::$app->authManager->revokeAll($id);
+        $model=User::findOne(['id'=>$id]);
+        $model->delete();
+        \Yii::$app->session->setFlash('success','用户删除成功');
+        return $this->redirect(['index']);
+    }
 
     //定义验证码操作
     public function actions(){
@@ -105,6 +126,7 @@ class UserController extends \yii\web\Controller
     public function actionLogout()
     {
         \Yii::$app->user->logout();
+        \Yii::$app->session->setFlash('success','注销成功');
         return $this->redirect(['user/login']);
     }
 
@@ -112,8 +134,6 @@ class UserController extends \yii\web\Controller
     public function actionMy(){
         //获取当前登录用户的id
         $id = \Yii::$app->user->id;
-
-
         //如果没有登录跳转登录页面
         if(!$id){
             \Yii::$app->session->setFlash('success','你还没有登录请登录');
@@ -141,14 +161,10 @@ class UserController extends \yii\web\Controller
                 }else{
                     $model->addError('old_password','旧密码错误');
                 }
-
             }
         }
-
-
         return $this->render('my',['model'=>$model]);
     }
-
 
 }
 

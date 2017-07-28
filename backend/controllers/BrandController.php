@@ -43,6 +43,7 @@ class BrandController extends Controller
 
                 }*/
                 $model->save();
+                \Yii::$app->session->setFlash('success','添加品牌成功');
                 return $this->redirect(['brand/index']);
             }else{
                 var_dump($model->getErrors());
@@ -92,6 +93,7 @@ class BrandController extends Controller
 
                 }*/
                 $model->save();
+                \Yii::$app->session->setFlash('success','修改品牌成功');
                 return $this->redirect(['brand/index']);
             }else{
                 var_dump($model->getErrors());
@@ -106,6 +108,7 @@ class BrandController extends Controller
         $model=Brand::findOne(['id'=>$id]);
         $model->status='-1';
         $model->save();
+        \Yii::$app->session->setFlash('success','删除品牌成功');
        return $this->redirect(['brand/index']);
 
     }
@@ -126,9 +129,12 @@ class BrandController extends Controller
     public function actionDeletes($id){
         $model=Brand::findOne(['id'=>$id]);
         if($model->logo){
+            $qiniu = new Qiniu(\Yii::$app->params['qiniu']);
+            $qiniu->delete($model->logo);
             unlink($model->logo);
         }
         $model->delete();
+        \Yii::$app->session->setFlash('success','删除品牌成功');
         return $this->redirect(['hsz']);
     }
 
@@ -137,13 +143,11 @@ class BrandController extends Controller
         $model=Brand::findOne(['id'=>$id]);
         $model->status='1';
         $model->save();
+        \Yii::$app->session->setFlash('success','还原品牌成功');
         return $this->redirect(['hsz']);
     }
 
-
-
-
-
+//    实例化七牛云
     public function actions() {
         return [
             's-upload' => [

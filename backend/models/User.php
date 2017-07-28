@@ -27,6 +27,13 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
     public $code;
     public $password;
+    public $rules=[];
+
+
+    public static $status_option=[
+      1=>'启用',0=>'禁用'
+    ];
+
 
     /**
      * @inheritdoc
@@ -41,6 +48,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
      */
     const SCENARIO_ADD='Add';
     const SCENARIO_LOGIN='Login';
+   // const SCENARIO_EDIT = 'Edit';
 
     /**
      * 定义场景
@@ -49,8 +57,8 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     {
         $scenarios=[
           self::SCENARIO_ADD=>[],
-            self::SCENARIO_LOGIN=>[]
-
+            self::SCENARIO_LOGIN=>[],
+          //  self::SCENARIO_EDIT =>[]
         ];
         $scenarios2 = parent::scenarios();
         return ArrayHelper::merge($scenarios,$scenarios2);
@@ -67,8 +75,12 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             [['username','password','email'], 'string', 'max' => 255],
             ['email','match','pattern'=>'/^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$/'],
             [['username','email'], 'unique'],
+            ['status','integer'],
             ['code','captcha','captchaAction'=>'user/captcha'],
             //['email','email']
+            ['rules','safe'],
+
+
 
         ];
     }
@@ -91,10 +103,12 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             'last_login_time' => '最后登录时间',
             'last_login_ip' => '最后登录IP',
             'code'=>'验证码',
-            'password'=>'密码'
+            'password'=>'密码',
+            'rules'=>'用户角色'
         ];
     }
 
+//附属行为
     public function behaviors()
     {
         return [
