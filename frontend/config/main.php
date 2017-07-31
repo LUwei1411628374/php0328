@@ -7,16 +7,21 @@ $params = array_merge(
 );
 
 return [
+
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    //默认路由
+    'defaultRoute'=>'member/index',
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'loginUrl' => ['member/login'],
+            //'identityClass' => 'common\models\User',
+            'identityClass'=>\frontend\models\Member::className(),
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],

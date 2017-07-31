@@ -6,6 +6,7 @@
  * Time: 14:33
  */
 namespace backend\controllers;
+use backend\filters\RbacFilter;
 use backend\models\GoodsCategory;
 use yii\data\Pagination;
 use yii\db\Exception;
@@ -122,5 +123,14 @@ class GoodsCategoryController extends Controller
         //获取所以分类数据
         $categories = GoodsCategory::find()->select(['id','parent_id','name'])->asArray()->all();
         return $this->render('add',['model'=>$model,'categories'=>$categories]);
+    }
+
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+            ]
+        ];
     }
 }

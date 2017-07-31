@@ -1,7 +1,17 @@
 
+<?php
+    if(Yii::$app->user->can('article-category/add')){
+        echo \yii\bootstrap\Html::a('添加文章',['article-category/add'],['class'=>'btn btn-primary']);
+    }
+?>
+&emsp;
+<?php
+    if(Yii::$app->user->can('article-category/hsz')){
+        echo \yii\bootstrap\Html::a('回收站',['article-category/hsz'],['class'=>'btn btn-warning']);
+    }
+?>
 
-<?=\yii\bootstrap\Html::a('添加文章',['article-category/add'],['class'=>'btn btn-primary'])?>
-<?=\yii\bootstrap\Html::a('回收站',['article-category/hsz'],['class'=>'btn btn-warning'])?>
+
 <table class="table table-bordered">
     <tr>
         <th>ID</th>
@@ -19,11 +29,21 @@
         <td><?=$article->sort?></td>
         <td><?=\backend\models\ArticleCategory::getArticleOptions()[$article->status]?></td>
         <td>
-            <?=\yii\bootstrap\Html::a('修改',['article-category/edit','id'=>$article->id],['class'=>'btn btn-warning'])?>
-            <?=\yii\bootstrap\Html::a('删除',['article-category/delete','id'=>$article->id],['class'=>'btn btn-danger'])?>
+            <?php
+                if(Yii::$app->user->can('article-category/edit')){
+                    echo \yii\bootstrap\Html::a('修改',['article-category/edit','id'=>$article->id],['class'=>'btn btn-warning']);
+                }
+            ?>
+            &emsp;
+            <?php
+                if(Yii::$app->user->can('article-category/delete')){
+                    echo \yii\bootstrap\Html::a('删除',['article-category/delete','id'=>$article->id],['class'=>'btn btn-danger']);
+                }
+            ?>
         </td>
     </tr>
     <?php endforeach;?>
 </table>
 <?php
 echo \yii\widgets\LinkPager::widget(['pagination'=>$page,'nextPageLabel'=>'下一页','prevPageLabel'=>'上一页','firstPageLabel'=>'首页','lastPageLabel'=>'末页']);
+?>

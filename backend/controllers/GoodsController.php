@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\filters\RbacFilter;
 use backend\models\Goods;
 use backend\models\GoodsDayCount;
 use backend\models\GoodsGallery;
@@ -217,14 +218,21 @@ class GoodsController extends \yii\web\Controller
                         $action->output['fileUrl'] = $action->getWebUrl();//输出文件的相对路径
                     }
 
-
-
-//                    $action->getFilename(); // "image/yyyymmddtimerand.jpg"
-//                    $action->getWebUrl(); //  "baseUrl + filename, /upload/image/yyyymmddtimerand.jpg"
-//                    $action->getSavePath(); // "/var/www/htdocs/upload/image/yyyymmddtimerand.jpg"
-
                 },
             ],
+        ];
+    }
+
+
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+                'except'=>[
+                    's-upload','upload'
+                ]
+            ]
         ];
     }
 

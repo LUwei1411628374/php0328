@@ -7,6 +7,7 @@
  */
 namespace backend\controllers;
 
+use backend\filters\RbacFilter;
 use backend\models\Brand;
 use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use Psr\Http\Message\UploadedFileInterface;
@@ -199,6 +200,18 @@ class BrandController extends Controller
                     $action->output['fileUrl']  = $url;
                 },
             ],
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+                'except'=>[
+                    's-upload'
+                ]
+            ]
         ];
     }
 }

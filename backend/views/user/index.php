@@ -1,5 +1,9 @@
+<?php
+    if(Yii::$app->user->can('user/add')){
+        echo \yii\bootstrap\Html::a('添加',['add'],['class'=>'btn btn-info']);
+    }
+?>
 
-<?=\yii\bootstrap\Html::a('添加',['add'],['class'=>'btn btn-info'])?>
 <table class="table table-bordered">
 
     <?php
@@ -28,8 +32,17 @@
         <td><?=date('Y-m-d',$user->created_at)?></td>
         <td><?=$user->updated_at==0?'没有修改过':date('Y-m-d',$user->updated_at)?></td>
         <td>
-            <?=\yii\helpers\Html::a('修改',['edit','id'=>$user->id],['class'=>'btn btn-warning'])?>
-            <?=\yii\helpers\Html::a('删除',['user/delete','id'=>$user->id],['class'=>'btn btn-danger'])?>
+            <?php
+                if(Yii::$app->user->can('user/edit')){
+                    echo  \yii\helpers\Html::a('修改',['edit','id'=>$user->id],['class'=>'btn btn-warning']);
+                }
+            ?>
+            &emsp;
+            <?php
+            if(Yii::$app->user->can('user/delete')){
+                echo  \yii\helpers\Html::a('删除',['user/delete','id'=>$user->id],['class'=>'btn btn-danger']);
+            }
+            ?>
         </td>
     </tr>
     <?php endforeach;?>

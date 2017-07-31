@@ -7,6 +7,7 @@
  */
 namespace backend\controllers;
 
+use backend\filters\RbacFilter;
 use backend\models\PermissionForm;
 use backend\models\RuleForm;
 use yii\helpers\ArrayHelper;
@@ -160,6 +161,14 @@ class RbacController extends Controller
        return $this->redirect('rule-index');
     }
 
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+            ]
+        ];
+    }
 
 }
 

@@ -6,9 +6,18 @@
             </span>
     </div>
 </form>
-<?=\yii\bootstrap\Html::a('添加文章',['article/add'],['class'=>'btn btn-primary'])?>
+<?php
+if(Yii::$app->user->can('article/add')){
+    echo \yii\bootstrap\Html::a('添加文章',['article/add'],['class'=>'btn btn-primary']);
+}
+?>
 &emsp;
-<?=\yii\bootstrap\Html::a('回收站',['article/hsz'],['class'=>'btn btn-info'])?>
+<?php
+if(Yii::$app->user->can('article/hsz')){
+    echo \yii\bootstrap\Html::a('回收站',['article/hsz'],['class'=>'btn btn-info']);
+}
+?>
+
 
 <table class="table table-bordered table-responsive" style="margin-top: 10px">
     <tr>
@@ -31,9 +40,23 @@
         <td><?=\backend\models\Article::getStatus()[$article->status]?></td>
         <td><?=date('Y-m-d',$article->create_time)?></td>
         <td>
-            <?=\yii\bootstrap\Html::a('查看',['article/look','id'=>$article->id],['class'=>'btn btn-primary'])?>
-            <?=\yii\bootstrap\Html::a('修改',['article/edit','id'=>$article->id],['class'=>'btn btn-warning'])?>
-            <?=\yii\bootstrap\Html::a('删除',['article/delete','id'=>$article->id],['class'=>'btn btn-danger'])?>
+            <?php
+                if(Yii::$app->user->can('article/look')){
+                    echo \yii\bootstrap\Html::a('查看',['article/look','id'=>$article->id],['class'=>'btn btn-primary']);
+                }
+            ?>
+            &emsp;
+            <?php
+                if(Yii::$app->user->can('article/edit')){
+                    echo \yii\bootstrap\Html::a('修改',['article/edit','id'=>$article->id],['class'=>'btn btn-warning']);
+                }
+            ?>
+            &emsp;
+            <?php
+                 if(Yii::$app->user->can('article/delete')){
+                     echo \yii\bootstrap\Html::a('删除',['article/delete','id'=>$article->id],['class'=>'btn btn-danger']);
+                 }
+            ?>
         </td>
     </tr>
     <?php endforeach;?>

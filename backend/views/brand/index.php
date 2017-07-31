@@ -7,9 +7,17 @@
             </span>
     </div>
 </form>
-
-<?= \yii\bootstrap\Html::a('添加',['brand/add'],['class'=>'btn btn-primary'])?>
-<?= \yii\bootstrap\Html::a('回收站',['brand/hsz'],['class'=>'btn btn-warning'])?>
+<?php
+    if(Yii::$app->user->can('brand/add')){
+        echo \yii\bootstrap\Html::a('添加',['brand/add'],['class'=>'btn btn-primary']);
+    }
+?>
+&emsp;
+<?php
+    if(Yii::$app->user->can('brand/hsz')){
+        echo \yii\bootstrap\Html::a('回收站',['brand/hsz'],['class'=>'btn btn-warning']);
+    }
+?>
 <table class="table table-bordered">
     <tr>
         <th>ID</th>
@@ -29,8 +37,17 @@
         <td><?=$brand->sort?></td>
         <td><?=\backend\models\Brand::getStatusOptions(false)[$brand->status]?></td>
         <td>
-            <?= \yii\bootstrap\Html::a('修改',['brand/edit','id'=>$brand->id],['class'=>'btn btn-warning'])?>
-            <?= \yii\bootstrap\Html::a('删除',['brand/delete','id'=>$brand->id],['class'=>'btn btn-danger'])?>
+            <?php
+                if(Yii::$app->user->can('brand/edit')){
+                    echo \yii\bootstrap\Html::a('修改',['brand/edit','id'=>$brand->id],['class'=>'btn btn-warning']);
+                }
+            ?>
+            &emsp;
+            <?php
+                if(Yii::$app->user->can('brand/delete')){
+                    echo \yii\bootstrap\Html::a('删除',['brand/delete','id'=>$brand->id],['class'=>'btn btn-danger']);
+                }
+            ?>
         </td>
     </tr>
     <?php endforeach;?>

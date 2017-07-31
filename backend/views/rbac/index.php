@@ -1,5 +1,8 @@
-
-<?=\yii\bootstrap\Html::a('添加',['add'],['class'=>'btn btn-info'])?>
+<?php
+if(Yii::$app->user->can('rbac/add')){
+    echo \yii\bootstrap\Html::a('添加',['add'],['class'=>'btn btn-info']);
+}
+?>
 <table class="table table-responsive table-bordered">
     <thead>
     <tr>
@@ -13,8 +16,18 @@
         <tr>
             <td><?=$model->name?></td>
             <td><?=$model->description?></td>
-            <td><?=\yii\bootstrap\Html::a('修改',['edit','name'=>$model->name],['class'=>'btn btn-xs btn-warning'])?>
-                <?=\yii\bootstrap\Html::a('删除',['delete','name'=>$model->name],['class'=>'btn btn-xs btn-danger'])?>
+            <td>
+                <?php
+                    if(Yii::$app->user->can('rbac/edit')){
+                        echo \yii\bootstrap\Html::a('修改',['edit','name'=>$model->name],['class'=>'btn btn-xs btn-warning']);
+                    }
+                ?>
+                &emsp;
+                <?php
+                    if(Yii::$app->user->can('rbac/delete')){
+                        echo \yii\bootstrap\Html::a('删除',['delete','name'=>$model->name],['class'=>'btn btn-xs btn-danger']);
+                    }
+                ?>
             </td>
         </tr>
     <?php endforeach;?>

@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\filters\RbacFilter;
 use backend\models\ArticleCategory;
 use yii\data\Pagination;
 use yii\web\Request;
@@ -89,5 +90,16 @@ class ArticleCategoryController extends \yii\web\Controller
         $model->save();
         \Yii::$app->session->setFlash('success','还原文章分类成功');
         return $this->redirect(['hsz']);
+    }
+
+
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+
+            ]
+        ];
     }
 }

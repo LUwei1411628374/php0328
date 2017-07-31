@@ -1,5 +1,8 @@
-
-<?=\yii\bootstrap\Html::a('添加',['rule-add'],['class'=>'btn btn-info'])?>
+<?php
+    if(Yii::$app->user->can('rbac/rule-add')){
+       echo \yii\bootstrap\Html::a('添加',['rule-add'],['class'=>'btn btn-info']);
+    }
+?>
 <table class="table table-bordered">
 
     <tr>
@@ -12,8 +15,15 @@
         <td><?=$model->name?></td>
         <td><?=$model->description?></td>
         <td>
-            <?=\yii\bootstrap\Html::a('修改',['rule-edit','name'=>$model->name],['class'=>'btn btn-warning'])?>
-            <?=\yii\bootstrap\Html::a('删除',['rule-delete','name'=>$model->name],['class'=>'btn btn-danger'])?>
+            <?php
+            if(Yii::$app->user->can('rbac/rule-edit')){
+                 echo \yii\bootstrap\Html::a('修改',['rule-edit','name'=>$model->name],['class'=>'btn btn-warning']);
+            }?>
+           &emsp;
+            <?php
+            if(Yii::$app->user->can('rbac/rule-delete')){
+                echo \yii\bootstrap\Html::a('删除',['rule-delete','name'=>$model->name],['class'=>'btn btn-danger']);
+            }?>
         </td>
     </tr>
     <?php endforeach;?>

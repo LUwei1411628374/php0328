@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\filters\RbacFilter;
 use backend\models\MyForm;
 use backend\models\User;
 use yii\captcha\CaptchaAction;
@@ -166,6 +167,17 @@ class UserController extends \yii\web\Controller
         return $this->render('my',['model'=>$model]);
     }
 
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+                'except'=>[
+                    'captcha','login','logout'
+                ]
+            ]
+        ];
+    }
 }
 
 
