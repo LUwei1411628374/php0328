@@ -41,7 +41,7 @@ class m170720_032053_create_goods_table extends Migration
         'create_time'=>$this->integer()->notNull()->comment('添加时间'),
 //            view_times	int()	浏览次数
         'view_times'=>$this->integer()->notNull()->comment('浏览次数')
-        ]);
+        ], 'ENGINE=InnoDB');
     }
 
     /**

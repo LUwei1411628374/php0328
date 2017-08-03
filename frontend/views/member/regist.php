@@ -54,36 +54,36 @@
                 <li id="li_username">
                     <label for="">用户名：</label>
                     <input type="text" class="txt" name="Member[username]" />
-                    <p></p>
+                    <p style="color: red"></p>
                 </li>
                 <li id="li_password">
                     <label for="">密码：</label>
                     <input type="password" class="txt" name="Member[password]" />
-                    <p></p>
+                    <p style="color: red"></p>
                 </li>
                 <li id="li_re_password">
                     <label for="">确认密码：</label>
                     <input type="password" class="txt" name="Member[re_password]" />
-                    <p></p>
+                    <p style="color: red"></p>
                 </li>
                 <li id="li_email">
                     <label for="">邮箱：</label>
                     <input type="text" class="txt" name="Member[email]" />
-                    <p></p>
+                    <p style="color: red"></p>
                 </li>
                 <li id="li_tel">
                     <label for="">手机号码：</label>
                     <input type="text" class="txt" value="" name="Member[tel]" id="tel" placeholder=""/>
-                    <p></p>
+                    <p style="color: red"></p>
                 </li>
                 <li id="li_telCode">
                     <label for="">验证码：</label>
                     <input type="text" class="txt" value="" placeholder="请输入短信验证码" name="Member[telCode]" disabled="disabled" id="captcha"/> <input type="button" onclick="bindPhoneNum(this)" id="get_captcha" value="获取验证码" style="height: 25px;padding:3px 8px"/>
-                    <p></p>
+                    <p style="color: red"></p>
                 </li>
                 <li class="checkcode" id="li_code">
                     <?=$form->field($model,'code')->widget(\yii\captcha\Captcha::className(),['captchaAction'=>'member/captcha'])?>
-                    <p></p>
+                    <p style="color: red"></p>
                 </li>
 
                 <li>
@@ -146,7 +146,7 @@
         //启用输入框
         $('#captcha').prop('disabled',false);
 
-        var time=30;
+        var time=60;
         var interval = setInterval(function(){
             time--;
             if(time<=0){
@@ -168,7 +168,7 @@
         $.post('/member/ajax-regist',$("#login_form").serialize(),function(data){
             //console.log(data);
             var json = JSON.parse(data);
-            console.log(json);
+            //console.log(json);
             if(json.status){
                 alert('注册成功');
                 //跳转到登录页
@@ -176,7 +176,7 @@
             }else{
                 //注册失败 显示错误信息
                 $(json.msg).each(function(i,errors){
-                    console.log(errors);
+                    //console.log(errors);
 
                     $.each(errors,function(name,error){
                         $("#li_"+name+" p").text(error.join(","));
@@ -195,6 +195,54 @@
             //console.log(json.url);
         });
     });
+
+//    手机验证码
+
+    $(function () {
+        $("#tel").blur(function () {
+            var tels = $("#tel").val();
+            var flag = false;
+            var myreg = /^(((13[0-9]{1})|(14[0-9]{1})|(17[0]{1})|(15[0-3]{1})|(15[5-9]{1})|(18[0-9]{1}))+\d{8})$/;
+            if(tels == ''){
+                alert("手机号码不能为空！")
+            }else if(tels.length !=11){
+                alert("请输入有效的手机号码！")
+            }else if(!myreg.test(tels)){
+                alert("请输入有效的手机号码！")
+            }else {
+                flag = true;
+            }
+        })
+    });
+
+        $("#get_captcha").click(function () {
+            $(function (){
+                var tels = $("#tel").val();
+            console.debug(tels);
+            $.post('tel',{tels:tels},function (data) {
+                var json = JSON.parse(data);
+                //console.log(json);
+                if(json.status){
+                    alert('短信发送成功');
+                    //跳转到登录页
+                    //window.location.href="/member/login";
+                }else{
+                    //注册失败 显示错误信息
+                    $(json.msg).each(function(i,errors){
+                        $.each(errors,function(name,error){
+                            $("#li_"+name+" p").text(error.join(","));
+                        });
+
+                    });
+                }
+
+            })
+
+        })
+    });
+
+
+
 </script>
 </body>
 </html>

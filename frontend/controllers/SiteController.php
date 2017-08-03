@@ -1,6 +1,8 @@
 <?php
 namespace frontend\controllers;
 
+use backend\models\Goods;
+use frontend\models\Cart;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
@@ -12,12 +14,15 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use yii\web\Cookie;
+use yii\web\Request;
 
 /**
  * Site controller
  */
 class SiteController extends Controller
 {
+    public $enableCsrfValidation = false;
     /**
      * @inheritdoc
      */
@@ -210,4 +215,187 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
+//    添加到购物车
+    public function actionAddCart($goods_id,$amount){
+//        未登录保存到cookie
+        if(Yii::$app->user->isGuest){
+            $cookies = Yii::$app->request->cookies;
+//            获取cookies里购物车数据
+            $shop = $cookies->get('shop');
+//            判断cookies里有没有数据
+            if($shop==null){
+                $shops = [$goods_id=>$amount];
+            }else{
+                $shops = unserialize($shop->value);
+//                判断购物车里面是否已经有此商品 有就增加 没有就添加新数据
+                if(isset($shops[$goods_id])){
+                    $shops[$goods_id] +=$amount;
+                }else{
+//                    没有就添加新数据
+                    $shops[$goods_id] = $amount;
+                }
+            }
+//            将数据写入cookie
+            $cookies = Yii::$app->response->cookies;
+            //将数据以数组的形式保存到cookie中
+            $cookie = new Cookie([
+               'name'=>'shop',
+                'value'=>serialize($shops),
+                'expire'=>7*24*3600+time()
+            ]);
+            $cookies->add($cookie);
+            //var_dump($cookies->get(''));
+        }else{
+            $cart=new Cart();
+            $member_id = Yii::$app->user->id;
+            $cart->amount= Yii::$app->request->get('amount');
+            $cart->goods_id = Yii::$app->request->get('goods_id');
+            if($cart->validate()){
+                $model = Cart::find()->where(['and',"member_id=$member_id","goods_id=$cart->goods_id"])->one();
+                if($model==null){
+                    $cart->member_id=$member_id;
+                    $cart->save();
+                }else{
+
+                    $model->amount += $amount;
+                    $model->save();
+                }
+            }
+        }
+        return $this->redirect(['cart']);
+    }
+
+
+//    购物车展示
+    public function actionCart(){
+        $this->layout = false;
+        //判断用户属否登录 没有登录从cookie中取数据  登录从数据库取数据
+        if(Yii::$app->user->isGuest){
+            $cookies=Yii::$app->request->cookies;
+            $shop = $cookies->get('shop');
+            //判断cookie中是否有数据  没有返回空数组
+            if($shop==null){
+                $shops= [];
+            }else{
+                $shops = unserialize($shop);
+            }
+            //var_dump($shops);exit;
+            $models = Goods::find()->where(['in','id',array_keys($shops)])->asArray()->all();
+        }else{
+            //用户登录状态从数据表取出数据
+            $member_id = \Yii::$app->user->id;
+            $models = Cart::find()->where(['member_id' => $member_id])->all();
+            $goods_id = [];
+            $shops = [];
+            foreach ($models as $model) {
+                //将得到得goods_id和放入数组中
+                $goods_id[] = $model->goods_id;
+
+                $shops[$model->goods_id] = $model->amount;
+            }
+            //查询出所有商品
+            $models = Goods::find()->where(['in', 'id', $goods_id])->all();
+        }
+        return $this->render('cart',['models'=>$models,'shops'=>$shops]);
+    }
+//    修改购物车数量
+    public function actionAjaxCart(){
+        //接收数据
+        $goods_id = Yii::$app->request->post('goods_id');
+        $amount = Yii::$app->request->post('amount');
+        //判断是否登录
+        if(Yii::$app->user->isGuest){
+            $cookies = Yii::$app->request->cookies;
+            $shop = $cookies->get('shop');
+            //判断是否有数据
+            if($shop==null){
+                //没有数据就添加
+                $shops = [$goods_id=>$amount];
+            }else{
+                //有数据就判断里面有没有此商品没有就添加，有就增加数量
+                $shops = unserialize($shop->value);
+                if(isset($shops[$goods_id])){
+                    //有就更新数量
+                    $shops[$goods_id]=$amount;
+                }else{
+                    //没有就添加
+                    $shops[$goods_id]=$amount;
+                }
+            }
+            //将商品id和商品数量写入cookie
+            $cookies = Yii::$app->response->cookies;
+            $cookie = new Cookie([
+               'name'=>'shop',
+                'value'=>serialize($shops),
+                'expire'=>7*24*3600+time()
+            ]);
+            $cookies->add($cookie);
+            return 'success';
+        }else{
+            $member_id = \Yii::$app->user->identity->getId();
+            $models = Cart::find()->where(['and','member_id'=>$member_id,'goods_id'=>$goods_id])->one();
+            $models->amount = $amount;
+            $models->save();
+        }
+    }
+
+//    删除
+    public function actionDelete($id){
+        if(!\Yii::$app->user->isGuest){
+            $member_id=\Yii::$app->user->identity->getId();
+            $models = Cart::find()
+                ->andWhere(['member_id'=>$member_id])
+                ->andWhere(['goods_id'=>$id])
+                ->one();
+            $models->delete();
+            return $this->redirect(['site/cart']);
+        }
+        else{
+
+            $cookies=\Yii::$app->request->cookies;
+            $carts=unserialize($cookies->get('goods'));
+            unset($carts[$id]);
+            $cookies=\Yii::$app->response->cookies;
+            //实例化cookie
+            $cookie=new Cookie([
+                'name'=>'goods',//cookie名
+                'value'=>serialize($carts) ,//cookie值
+                'expire'=>3*24*3600+time(),//设置过期时间
+            ]);
+            $cookies->add($cookie);//将数据保存到cookie
+            return $this->redirect(['site/cart']);
+
+        }
+    }
+
+//    同步
+//    public function actionTong(){
+//        $cookies = Yii::$app->request->cookies;
+//        $shop = $cookies->get('shop');
+//        $member_id = Yii::$app->user->id;
+//        if($shop){
+//            $shops = unserialize($shop);
+//            foreach ($shops as $goods_id=>$amount){
+//
+//              /*  $shopes= Cart::find()->where(['and','goods_id'=>$goods_id,'member_id'=>$member_id])->one();*/
+//                $shopes = Cart::find()
+//                    ->andWhere(['member_id'=>$member_id])
+//                    ->andWhere(['goods_id'=>$goods_id])
+//                    ->one();
+//                if($shopes){
+//                    $shopes->amount+=$amount;
+//                    $shopes->save();
+//                }else{
+//                    $cart = new Cart();
+//                    $cart->amount=$amount;
+//                    $cart->goods_id=$goods_id;
+//                    $cart->member_id=$member_id;
+//                    $cart->save();
+//                }
+//            }
+//        }
+//
+//    }
 }
+
+

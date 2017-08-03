@@ -32,9 +32,11 @@ if(Yii::$app->user->can('article/hsz')){
     </tr>
     <?php foreach ($articles as $article):?>
     <tr>
+
         <td><?=$article->id?></td>
         <td><?=$article->name?></td>
         <td><?=$article->intro?></td>
+
         <td><?=$article->articleCategory->name?></td>
         <td><?=$article->sort?></td>
         <td><?=\backend\models\Article::getStatus()[$article->status]?></td>
