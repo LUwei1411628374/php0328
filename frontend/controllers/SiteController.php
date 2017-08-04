@@ -368,34 +368,6 @@ class SiteController extends Controller
         }
     }
 
-//    同步
-//    public function actionTong(){
-//        $cookies = Yii::$app->request->cookies;
-//        $shop = $cookies->get('shop');
-//        $member_id = Yii::$app->user->id;
-//        if($shop){
-//            $shops = unserialize($shop);
-//            foreach ($shops as $goods_id=>$amount){
-//
-//              /*  $shopes= Cart::find()->where(['and','goods_id'=>$goods_id,'member_id'=>$member_id])->one();*/
-//                $shopes = Cart::find()
-//                    ->andWhere(['member_id'=>$member_id])
-//                    ->andWhere(['goods_id'=>$goods_id])
-//                    ->one();
-//                if($shopes){
-//                    $shopes->amount+=$amount;
-//                    $shopes->save();
-//                }else{
-//                    $cart = new Cart();
-//                    $cart->amount=$amount;
-//                    $cart->goods_id=$goods_id;
-//                    $cart->member_id=$member_id;
-//                    $cart->save();
-//                }
-//            }
-//        }
-//
-//    }
 }
 
 

@@ -88,7 +88,7 @@ class MemberController extends \yii\web\Controller
                 //保存数据提示验证成功
                 return Json::encode(['status'=>true,'msg'=>'注册成功']);
             }else{
-                $model->addError('telCode',"手机验证码不正确 ");
+                $model->addError('telCode',"手机或者手机验证码不正确 ");
                 return Json::encode(['status'=>false,'msg'=>$model->getErrors()]);
             }
         }else{

@@ -732,7 +732,7 @@
 			<a href="">京西论坛</a>
 		</p>
 		<p class="copyright">
-			 © 2005-2013 京东网上商城 版权所有，并保留所有权利。  ICP备案证书号:京ICP证070359号 
+            <a href="http://www.miitbeian.gov.cn/">鲁ICP备17034009号</a>
 		</p>
 		<p class="auth">
 			<a href=""><img src="<?=Yii::getAlias('@web')?>/images/xin.png" alt="" /></a>

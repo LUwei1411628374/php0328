@@ -3,14 +3,14 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <title>填写核对订单信息</title>
-    <link rel="stylesheet" href="<?=Yii::getAlias('@web')?>/style/base.css" type="text/css">
-    <link rel="stylesheet" href="<?=Yii::getAlias('@web')?>/style/global.css" type="text/css">
-    <link rel="stylesheet" href="<?=Yii::getAlias('@web')?>/style/header.css" type="text/css">
-    <link rel="stylesheet" href="<?=Yii::getAlias('@web')?>/style/fillin.css" type="text/css">
-    <link rel="stylesheet" href="<?=Yii::getAlias('@web')?>/style/footer.css" type="text/css">
+    <link rel="stylesheet" href="<?=\Yii::getAlias('@web')?>/style/base.css" type="text/css">
+    <link rel="stylesheet" href="<?=\Yii::getAlias('@web')?>/style/global.css" type="text/css">
+    <link rel="stylesheet" href="<?=\Yii::getAlias('@web')?>/style/header.css" type="text/css">
+    <link rel="stylesheet" href="<?=\Yii::getAlias('@web')?>/style/fillin.css" type="text/css">
+    <link rel="stylesheet" href="<?=\Yii::getAlias('@web')?>/style/footer.css" type="text/css">
 
-    <script type="text/javascript" src="<?=Yii::getAlias('@web')?>/js/jquery-1.8.3.min.js"></script>
-    <script type="text/javascript" src="<?=Yii::getAlias('@web')?>/js/cart2.js"></script>
+    <script type="text/javascript" src="<?=\Yii::getAlias('@web')?>/js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="<?=\Yii::getAlias('@web')?>/js/cart2.js"></script>
 
 </head>
 <body>
@@ -39,7 +39,7 @@
 <!-- 页面头部 start -->
 <div class="header w990 bc mt15">
     <div class="logo w990">
-        <h2 class="fl"><a href="index.html"><img src="<?=Yii::getAlias('@web')?>/images/logo.png" alt="京西商城"></a></h2>
+        <h2 class="fl"><a href="index.html"><img src="<?=\Yii::getAlias('@web')?>/images/logo.png" alt="京西商城"></a></h2>
         <div class="flow fr flow2">
             <ul>
                 <li>1.我的购物车</li>
@@ -58,135 +58,143 @@
     <div class="fillin_hd">
         <h2>填写并核对订单信息</h2>
     </div>
-    <?php $total=[]; ?>
-    <form action="/order/add-order" method="post">
-        <div class="fillin_bd">
-
-            <!-- 收货人信息  start-->
-            <div class="address">
-                <h3>收货人信息</h3>
-                <?php foreach ($path as $v):?>
-                    <div class="address_info">
-                        <p><input type="radio" value="<?=$v->id?>" name="address_id"/><?=$v->name?>
-
-                            <?=$v->province?><?=$v->city?><?=$v->area?><?=$v->address?> </p>
-                    </div>
+    <div class="fillin_bd">
+        <!-- 收货人信息  start-->
+        <div class="address">
+            <a href="/member/address"><h3>新增收货地址</h3></a>
+            <h3>收货人信息</h3>
+            <div class="address_info">
+                <?php foreach($address as $addres):?>
+                <p id="address">
+                    <input type="radio" name="address_id" value="<?=$addres->id?>"/><?=$addres->name?>  <?=$addres->tel?>  <?=$addres->province?> <?=$addres->city?> <?=$addres->address?>
+                </p>
                 <?php endforeach;?>
-
             </div>
-            <!-- 收货人信息  end-->
-
-            <!-- 配送方式 start -->
-            <div class="delivery">
-                <h3>送货方式 </h3>
-
-
-                <div class="delivery_select">
-
-                    <table>
-                        <thead>
-                        <tr>
-                            <th class="col1">送货方式</th>
-                            <th class="col2">运费</th>
-                            <th class="col3">运费标准</th>
-                        </tr>
-                        </thead>
-
-                        <tbody>
-                        <?php foreach ($rows as $key=>$row):?>
-                            <tr class="cur">
-                                <td>
-                                    <input type="radio" name="delivery" checked="checked" value="<?=$key?>" /><?=$row['name']?>
-
-                                </td>
-                                <td><?=$row['price']?></td>
-                                <td><?=$row['detail']?></td>
-                            </tr>
-                        <?php endforeach;?>
-                        </tbody>
-                    </table>
-
-                </div>
-            </div>
-            <div class="pay">
-                <h3>支付方式 </h3>
-                <div class="pay_select">
-                    <table>
-                        <?php foreach ($datas as $key1=>$data):?>
-                            <tr class="cur">
-                                <td class="col1"><input type="radio" name="pay" value="<?=$key1?>"/><?=$data['name']?></td>
-                                <td class="col2"><?=$data['content']?></td>
-                            </tr>
-                        <?php endforeach;?>
-                    </table>
-
-                </div>
-            </div>
-            <div class="goods">
-                <h3>商品清单</h3>
+        </div>
+        <!-- 收货人信息  end-->
+        <!-- 配送方式 start -->
+        <div class="delivery">
+            <h3>送货方式 </h3>
+            <div class="delivery_select">
                 <table>
                     <thead>
                     <tr>
-                        <th class="col1">商品</th>
-                        <th class="col3">价格</th>
-                        <th class="col4">数量</th>
-                        <th class="col5">小计</th>
+                        <th class="col1">送货方式</th>
+                        <th class="col2">运费</th>
+                        <th class="col3">运费标准</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <?php $count=0;
-                    $price=0;//总金额变量
-
-                    ?>
-                    <?php foreach($goods as $good):?>
-                        <tr>
-                            <td class="col1"><a href=""><img src="http://admin.yii2shop.com<?=$good->logo?>" alt="" /></a>  <strong>
-                                    <a href=""><?=$good->name?></a></strong></td>
-                            <td class="col3">￥<?=$good->shop_price?></td>
-                            <td class="col4"><?=$amount[$good->id]?></td>
-                            <?php $count+=$amount[$good->id]?>
-                            <td class="col5"><span>￥
-                                    <?=$good->shop_price*$amount[$good->id]?></span></td>
-                            <?php $total[$good->id]=$good->shop_price*$amount[$good->id]?>
-                            <?php $price+=$good->shop_price*$amount[$good->id]?>
-                        </tr>
-                    <?php endforeach;?>
-
-                    </tbody>
-                    <tfoot>
-                    <tr>
-                        <td colspan="5">
-                            <ul>
-                                <li>
-                                    <span><?=$count?>，总商品金额：</span>
-                                    <em>￥<?=$price?></em>
-                                </li>
-
-                                <li>
-                                    <span>应付总额：</span>
-                                    <em>￥<?=$price?></em>
-                                </li>
-                            </ul>
+                    <?php foreach($deliveries as $key=>$delivery):?>
+                    <tr class="delivery_way">
+                        <td>
+                            <input type="radio" name="delivery" <?=$delivery['default']?'checked':''?> value="<?=$key?>" /><?=$delivery['name']?>
                         </td>
+                        <td><?=$delivery['price']?></td>
+                        <td><?=$delivery['detail']?></td>
                     </tr>
-                    </tfoot>
+                    <?php endforeach;?>
+                    </tbody>
                 </table>
             </div>
-            <!-- 商品清单 end -->
-
         </div>
+        <!-- 配送方式 end -->
+        <!-- 支付方式  start-->
+        <div class="pay">
+            <h3>支付方式 </h3>
+            <div class="pay_select">
+                <table>
+                    <?php foreach($payments as $key=>$payment):?>
+                    <tr class="cur">
+                        <td class="col1"><input type="radio" name="pay" value="<?=$key?>" <?=$payment['default']?'checked':''?>/><?=$payment['name']?></td>
+                        <td class="col2"><?=$payment['detail']?></td>
+                    </tr>
+                    <?php endforeach;?>
+                </table>
+            </div>
+        </div>
+        <!-- 支付方式  end-->
+        <!-- 发票信息 start-->
+        <div class="receipt none">
+            <h3>发票信息 </h3>
+            <div class="receipt_select ">
+                <form action="">
+                    <ul>
+                        <li>
+                            <label for="">发票抬头：</label>
+                            <input type="radio" name="type" checked="checked" class="personal" />个人
+                            <input type="radio" name="type" class="company"/>单位
+                            <input type="text" class="txt company_input" disabled="disabled" />
+                        </li>
+                        <li>
+                            <label for="">发票内容：</label>
+                            <input type="radio" name="content" checked="checked" />明细
+                            <input type="radio" name="content" />办公用品
+                            <input type="radio" name="content" />体育休闲
+                            <input type="radio" name="content" />耗材
+                        </li>
+                    </ul>
+                </form>
 
-        <div class="fillin_ft">
+            </div>
+        </div>
+        <!-- 发票信息 end-->
 
-            <input type="hidden" name="total" value="<?=serialize($total)?>"/>
-            <input type="hidden" name="zje" value="<?=$price?>"/>
-            <input type="submit" value="提交订单" />
-            <p>应付总额：<strong>￥<?=$price?>元</strong></p>
+        <!-- 商品清单 start -->
+        <div class="goods">
+            <h3>商品清单</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="col1">商品</th>
+                    <th class="col3">价格</th>
+                    <th class="col4">数量</th>
+                    <th class="col5">小计</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach($goods as $good):?>
+                <tr class="shop">
+                    <td class="col1"><a href=""><img src="http://admin.yii2shop.com<?=$good['logo']?>" alt="" /></a>  <strong><a href=""><?=$good['name']?></a></strong></td>
+                    <td class="col3"><?=$good['shop_price']?></td>
+                    <td class="col4"> <?=$carts[$good['id']]?></td>
+                    <td class="col5"><span><?=sprintf("%.2f",$good['shop_price']*$carts[$good['id']])?></span></td>
+                </tr>
+                <?php endforeach;?>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="5">
+                        <ul>
+                            <li>
+                                <span><span></span> 件商品，总商品金额</span>
+                                <em id="total"></em>
+                            </li>
 
-    </form>
+                            <li>
+                                <span>运费：</span>
+                                <em id="yun"></em>
+                            </li>
+                            <li>
+                                <span >应付总额：</span>
+                                <em id="total_all"></em>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+        <!-- 商品清单 end -->
+
+    </div>
+
+    <div class="fillin_ft">
+        <a id="sub-mit" href="javascript:;"><span>提交订单</span></a>
+        <p >应付总额：<strong id="zong"></strong></p>
+
+    </div>
 </div>
-</div>
-
 <!-- 主体部分 end -->
 
 <div style="clear:both;"></div>
@@ -209,12 +217,84 @@
         © 2005-2013 京东网上商城 版权所有，并保留所有权利。  ICP备案证书号:京ICP证070359号
     </p>
     <p class="auth">
-        <a href=""><img src="<?=Yii::getAlias('@web')?>/images/xin.png" alt="" /></a>
-        <a href=""><img src="<?=Yii::getAlias('@web')?>/images/kexin.jpg" alt="" /></a>
-        <a href=""><img src="<?=Yii::getAlias('@web')?>/images/police.jpg" alt="" /></a>
-        <a href=""><img src="<?=Yii::getAlias('@web')?>/images/beian.gif" alt="" /></a>
+        <a href=""><img src="<?=\Yii::getAlias('@web')?>/images/xin.png" alt="" /></a>
+        <a href=""><img src="<?=\Yii::getAlias('@web')?>/images/kexin.jpg" alt="" /></a>
+        <a href=""><img src="<?=\Yii::getAlias('@web')?>/images/police.jpg" alt="" /></a>
+        <a href=""><img src="<?=\Yii::getAlias('@web')?>/images/beian.gif" alt="" /></a>
     </p>
 </div>
 <!-- 底部版权 end -->
+<script type="text/javascript">
+    $(function () {
+        var nums= $(".shop .col4");
+        //console.debug(nums);
+        var shops = $(".shop .col5");
+        //console.debug(shops);
+        var x=0;
+        var y=0;
+
+        nums.each(function (i,obj) {
+            x+=Number($(obj).text());
+        });
+//        console.log(x);
+        shops.each(function (i,obj) {
+            y+=Number($(obj).text());
+        });
+//        console.log(y);
+        var total=$('#total');
+        total.text(y+'.00');
+        var count=$('#total').prev().find('span');
+//        console.log(count)
+        count.text(x);
+
+        //快递选择input/jq元素集合
+        var deliverys=$(".delivery .delivery_select tr.delivery_way input");
+        //快递运费
+        var yun=$('#yun');
+        var total_all=$('#total_all');
+        var zong=$('#zong');
+        deliverys.each(function (i,v) {
+           if(v.checked){
+                var fei=$(v).parent().next().text();
+                yun.text("￥"+fei);
+                var zongfei=parseInt(total.text())+parseInt(fei);
+                total_all.text("￥"+zongfei+'.00');
+               zong.text("￥"+zongfei+'.00'+'元');
+           }
+        });
+
+        //快递方式
+
+        deliverys.change(function () {
+            //console.log('11');
+            var deli_cost=$(this).parent().next().text();
+           yun.text('￥'+deli_cost);
+            var zongfei=parseInt(total.text())+parseInt(deli_cost);
+            total_all.text("￥"+zongfei+".00");
+            zong.text("￥"+zongfei);
+        });
+    });
+
+
+
+
+
+
+
+
+
+    $("#sub-mit").click(function(){
+            var address_id = $("input[name='address_id']:checked").val();
+            var delivery_id=$("input[name='delivery']:checked").val();
+            var payment_id=$("input[name='pay']:checked").val();
+            console.log(address_id);
+            console.log(delivery_id);
+            console.log(payment_id);
+            $.getJSON('/order/add-order',{address_id:address_id,delivery_id:delivery_id,payment_id:payment_id},function(data){
+                console.log(data);
+                window.location.href='/order/end';
+            });
+    })
+</script>
 </body>
 </html>

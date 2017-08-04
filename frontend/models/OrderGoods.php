@@ -32,7 +32,7 @@ class OrderGoods extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['order_id', 'goods_id', 'goods_name', 'logo', 'price', 'total'], 'required'],
+            [['order_id', 'goods_id', 'amount','price', 'total','goods_name', 'logo'],'required'],
             [['order_id', 'goods_id', 'amount'], 'integer'],
             [['price', 'total'], 'number'],
             [['goods_name', 'logo'], 'string', 'max' => 255],
@@ -49,9 +49,9 @@ class OrderGoods extends \yii\db\ActiveRecord
             'order_id' => '订单id',
             'goods_id' => '商品id',
             'goods_name' => '商品名称',
-            'logo' => '图片',
+            'logo' => '商品logo',
             'price' => '价格',
-            'amount' => '数量',
+            'amount' => '购买数量',
             'total' => '小计',
         ];
     }
