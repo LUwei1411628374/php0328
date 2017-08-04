@@ -143,25 +143,58 @@
 <script type="text/javascript" src="/js/jquery-1.8.3.min.js"></script>
 <script type="text/javascript">
     function bindPhoneNum(){
-        //启用输入框
-        $('#captcha').prop('disabled',false);
+            $(function (){
+                var tels = $("#tel").val();
+                var flag = false;
+                var myreg = /^(((13[0-9]{1})|(14[0-9]{1})|(17[0]{1})|(15[0-3]{1})|(15[5-9]{1})|(18[0-9]{1}))+\d{8})$/;
+                if(tels == ''){
+                    alert("手机号码不能为空！")
+                }else if(tels.length !=11){
+                    alert("请输入有效的手机号码！")
+                }else if(!myreg.test(tels)){
+                    alert("请输入有效的手机号码！")
+                }else {
+                    flag = true;
+                    $('#captcha').prop('disabled',false);
 
-        var time=60;
-        var interval = setInterval(function(){
-            time--;
-            if(time<=0){
-                clearInterval(interval);
-                var html = '获取验证码';
-                $('#get_captcha').prop('disabled',false);
-            } else{
-                var html = time + ' 秒后再次获取';
-                $('#get_captcha').prop('disabled',true);
-            }
+                    var time=60;
+                    var interval = setInterval(function(){
+                        time--;
+                        if(time<=0){
+                            clearInterval(interval);
+                            var html = '获取验证码';
+                            $('#get_captcha').prop('disabled',false);
+                        } else{
+                            var html = time + ' 秒后再次获取';
+                            $('#get_captcha').prop('disabled',true);
+                        }
 
-            $('#get_captcha').val(html);
-        },1000);
+                        $('#get_captcha').val(html);
+                    },1000);
+                    //console.debug(tels);
+                    $.post('tel',{tels:tels},function (data) {
+                        var json = JSON.parse(data);
+                        //console.log(json);
+                        if(json.status){
+                            alert('短信发送成功');
+                            //跳转到登录页
+                            //window.location.href="/member/login";
+                        }else{
+                            //注册失败 显示错误信息
+                            $(json.msg).each(function(i,errors){
+                                $.each(errors,function(name,error){
+                                    $("#li_"+name+" p").text(error.join(","));
+                                });
+
+                            });
+                        }
+                    })
+                }
+            })
     }
+
     //AJAX提交表单
+
     $(".login_btn").click(function(){
         //清除错误信息
         $("#login_form p").text("");
@@ -198,48 +231,77 @@
 
 //    手机验证码
 
-    $(function () {
-        $("#tel").blur(function () {
-            var tels = $("#tel").val();
-            var flag = false;
-            var myreg = /^(((13[0-9]{1})|(14[0-9]{1})|(17[0]{1})|(15[0-3]{1})|(15[5-9]{1})|(18[0-9]{1}))+\d{8})$/;
-            if(tels == ''){
-                alert("手机号码不能为空！")
-            }else if(tels.length !=11){
-                alert("请输入有效的手机号码！")
-            }else if(!myreg.test(tels)){
-                alert("请输入有效的手机号码！")
-            }else {
-                flag = true;
-            }
-        })
-    });
+//    $(function () {
+//        $("#tel").blur(function () {
+//            var tels = $("#tel").val();
+//            var flag = false;
+//            var myreg = /^(((13[0-9]{1})|(14[0-9]{1})|(17[0]{1})|(15[0-3]{1})|(15[5-9]{1})|(18[0-9]{1}))+\d{8})$/;
+//            if(tels == ''){
+//                alert("手机号码不能为空！")
+//            }else if(tels.length !=11){
+//                alert("请输入有效的手机号码！")
+//            }else if(!myreg.test(tels)){
+//                alert("请输入有效的手机号码！")
+//            }else {
+//                flag = true;
+//            }
+//        })
+//    });
 
-        $("#get_captcha").click(function () {
+        /*$("#get_captcha").click(function () {
             $(function (){
                 var tels = $("#tel").val();
-            console.debug(tels);
-            $.post('tel',{tels:tels},function (data) {
-                var json = JSON.parse(data);
-                //console.log(json);
-                if(json.status){
-                    alert('短信发送成功');
-                    //跳转到登录页
-                    //window.location.href="/member/login";
-                }else{
-                    //注册失败 显示错误信息
-                    $(json.msg).each(function(i,errors){
-                        $.each(errors,function(name,error){
-                            $("#li_"+name+" p").text(error.join(","));
-                        });
+                var flag = false;
+                var myreg = /^(((13[0-9]{1})|(14[0-9]{1})|(17[0]{1})|(15[0-3]{1})|(15[5-9]{1})|(18[0-9]{1}))+\d{8})$/;
+                if(tels == ''){
+                    alert("手机号码不能为空！")
+                    return false;
+                }else if(tels.length !=11){
+                    alert("请输入有效的手机号码！")
+                    return false;
+                }else if(!myreg.test(tels)){
+                    alert("请输入有效的手机号码！")
+                    return false;
+                }else {
+                    flag = true;
+                    $('#captcha').prop('disabled',false);
 
-                    });
+                    var time=60;
+                    var interval = setInterval(function(){
+                        time--;
+                        if(time<=0){
+                            clearInterval(interval);
+                            var html = '获取验证码';
+                            $('#get_captcha').prop('disabled',false);
+                        } else{
+                            var html = time + ' 秒后再次获取';
+                            $('#get_captcha').prop('disabled',true);
+                        }
+
+                        $('#get_captcha').val(html);
+                    },1000);
+                    //console.debug(tels);
+                    $.post('tel',{tels:tels},function (data) {
+                        var json = JSON.parse(data);
+                        //console.log(json);
+                        if(json.status){
+                            alert('短信发送成功');
+                            //跳转到登录页
+                            //window.location.href="/member/login";
+                        }else{
+                            //注册失败 显示错误信息
+                            $(json.msg).each(function(i,errors){
+                                $.each(errors,function(name,error){
+                                    $("#li_"+name+" p").text(error.join(","));
+                                });
+
+                            });
+                        }
+
+                    })
                 }
-
             })
-
-        })
-    });
+        });*/
 
 
 

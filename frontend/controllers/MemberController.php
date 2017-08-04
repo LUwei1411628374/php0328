@@ -88,8 +88,8 @@ class MemberController extends \yii\web\Controller
                 //保存数据提示验证成功
                 return Json::encode(['status'=>true,'msg'=>'注册成功']);
             }else{
-                //$model->addError('telCode',"手机验证码不正确 ");
-                return Json::encode(['status'=>false,'msg'=>"手机验证码不正确"]);
+                $model->addError('telCode',"手机验证码不正确 ");
+                return Json::encode(['status'=>false,'msg'=>$model->getErrors()]);
             }
         }else{
             //返回错误信息
@@ -194,8 +194,10 @@ class MemberController extends \yii\web\Controller
             $model->city=Address::getName($model->city)->name;
             $model->area=Address::getName($model->area)->name;
             $model->address=($model->province).($model->city).($model->area).($model->address);
+           // var_dump($model->status);exit;
 //            var_dump($model->address);exit;
             if($model->status){
+// $addresses->status = 0;
                 $model->status=1;
             }else{
                 $model->status=0;
