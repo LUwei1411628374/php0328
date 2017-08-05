@@ -113,9 +113,9 @@ class OrderController extends Controller{
         // }else{
         var_dump($model->getErrors());exit;
         //  }
-        //}
-        //return 'success';
-    }
+    //}
+    //return 'success';
+}
 
     //订单完成页面
     public function actionEnd(){
@@ -131,7 +131,7 @@ class OrderController extends Controller{
                 'rules'=>[
                     [
                         'allow'=>true,//是否允许
-                        'actions'=>['order','add-order'],//指定操作
+                        'actions'=>['order','add-order','order-index'],//指定操作
                         'roles'=>['@'],//指定角色 ?表示未认证用户(未登录) @表示已认证用户(已登录)
                     ],
                 ]
@@ -141,16 +141,9 @@ class OrderController extends Controller{
 
 
 
-
-
-
-
-
-
-
-
     public function actionOrderIndex(){
-        $models=Order::find()->all();
+        $member_id=\Yii::$app->user->id;
+        $models=Order::find()->where(['member_id'=>$member_id])->all();
         return $this->render('lists',['models'=>$models]);
     }
     public function actionDelete($id){

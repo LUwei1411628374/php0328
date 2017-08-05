@@ -152,11 +152,13 @@ class MemberController extends \yii\web\Controller
                     return Json::encode(['status'=>true,'msg'=>'登录成功']);
                 }else{
                     //返回错误信息
-                    return Json::encode(['status'=>false,'msg'=>'密码错误']);
+                    $model->addError('password','密码错误');
+                    return Json::encode(['status'=>false,'msg'=>$model->getErrors()]);
                 }
             }else{
                 //返回错误信息
-                return Json::encode(['status'=>false,'msg'=>'用户名不存在']);
+                $model->addError('username','用户名不存在');
+                return Json::encode(['status'=>false,'msg'=>$model->getErrors()]);
             }
         }else{
             //返回错误信息
@@ -278,8 +280,6 @@ class MemberController extends \yii\web\Controller
        if($a){
            \Yii::$app->session->set('code_'.$tels,$code);
            return Json::encode(['status'=>true,'msg'=>'短信发送成功']);
-       }else{
-           return Json::encode(['status'=>false,'msg'=>"短信发送失败"]);
        }
 
     }

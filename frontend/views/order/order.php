@@ -277,12 +277,6 @@
 
 
 
-
-
-
-
-
-
     $("#sub-mit").click(function(){
             var address_id = $("input[name='address_id']:checked").val();
             var delivery_id=$("input[name='delivery']:checked").val();
