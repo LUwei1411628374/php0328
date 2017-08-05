@@ -116,7 +116,6 @@ class MemberController extends \yii\web\Controller
                 if(\Yii::$app->security->validatePassword($model->password,$member->password_hash)){
                     //密码正确
                     $log = $model->rememberMe?24*3600:0;
-
                   //  \Yii::$app->user->login($member,$log);
                     \Yii::$app->user->login($member,$log);
                     $member->last_login_time=time();

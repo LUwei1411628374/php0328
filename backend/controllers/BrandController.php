@@ -30,7 +30,7 @@ class BrandController extends Controller
            /* $model->imgFile=UploadedFile::getInstance($model,'imgFile');*/
             if($model->validate()){
                 //判断有没有头像上传
-               /* if($model->imgFile){
+                if($model->imgFile){
                     //得到保存图片的绝对路径
                     $path=\Yii::getAlias('@webroot').'/upload/'.date('Ymd');
                     //判断是是否有文件夹  没有就创建
@@ -42,7 +42,7 @@ class BrandController extends Controller
                     $model->imgFile->saveAs(\Yii::getAlias('@webroot').$filePath,false);
                     $model->logo=$filePath;
 
-                }*/
+                }
                 $model->save();
                 \Yii::$app->session->setFlash('success','添加品牌成功');
                 return $this->redirect(['brand/index']);
