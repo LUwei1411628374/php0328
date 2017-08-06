@@ -12,7 +12,7 @@ return [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     //默认路由
-    'defaultRoute'=>'member/index',
+    'defaultRoute'=>'index.html',
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
         'request' => [

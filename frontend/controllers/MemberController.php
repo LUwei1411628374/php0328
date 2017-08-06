@@ -26,7 +26,9 @@ class MemberController extends \yii\web\Controller
     {
         $models = GoodsCategory::find()->where(['parent_id'=>0])->all();
 
-        return $this->render('index',['models'=>$models]);
+        $content=$this->render('index',['models'=>$models]);
+        file_put_contents('index.html',$content);
+
     }
 //    商品列表
 
@@ -64,9 +66,6 @@ class MemberController extends \yii\web\Controller
 
         return $this->render('list',['lists'=>$lists,'models'=>$models]);
     }*/
-
-
-
     //使用模版
     public function actionRegist(){
         $model = new Member();
